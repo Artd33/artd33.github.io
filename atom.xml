@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2019-12-26T10:24:59.637Z</updated>
+  <updated>2019-12-27T17:06:05.857Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -21,15 +21,15 @@
     <link href="http://yoursite.com/2019/12/23/BUUCTF-SQLi-LABS-Page-1-Basic-Challenges/"/>
     <id>http://yoursite.com/2019/12/23/BUUCTF-SQLi-LABS-Page-1-Basic-Challenges/</id>
     <published>2019-12-23T13:36:25.000Z</published>
-    <updated>2019-12-26T10:24:59.637Z</updated>
+    <updated>2019-12-27T17:06:05.857Z</updated>
     
-    <content type="html"><![CDATA[<html><head></head><body><h1 id="sqli-labs"><a href="#sqli-labs" class="headerlink" title="sqli-labs"></a>sqli-labs</h1></body></html>]]></content>
+    <content type="html"><![CDATA[<html><head></head><body><h2 id="这段时间在学sql注入。因为刚入门web，对一些基本操作和一些常见的漏洞有了一些了解之后，发现凭借这点东西在比赛的时候做出一道题是远远不够的，所以我想先把sql注入这一块完全掌握了，那么以后看到sql的题就是奥特曼打怪兽了。"><a href="#这段时间在学sql注入。因为刚入门web，对一些基本操作和一些常见的漏洞有了一些了解之后，发现凭借这点东西在比赛的时候做出一道题是远远不够的，所以我想先把sql注入这一块完全掌握了，那么以后看到sql的题就是奥特曼打怪兽了。" class="headerlink" title="这段时间在学sql注入。因为刚入门web，对一些基本操作和一些常见的漏洞有了一些了解之后，发现凭借这点东西在比赛的时候做出一道题是远远不够的，所以我想先把sql注入这一块完全掌握了，那么以后看到sql的题就是奥特曼打怪兽了。"></a>这段时间在学sql注入。因为刚入门web，对一些基本操作和一些常见的漏洞有了一些了解之后，发现凭借这点东西在比赛的时候做出一道题是远远不够的，所以我想先把sql注入这一块完全掌握了，那么以后看到sql的题就是奥特曼打怪兽了。</h2><h2 id="然后这篇文BUUCTF-SQLi-LABS-PAGE-1-Basic-Challenges-写的是BUU上的sqli-labs中的wp和心得总结，因为题目很多，加上期末考试，这篇总结可能需要大概一个月才能写完。"><a href="#然后这篇文BUUCTF-SQLi-LABS-PAGE-1-Basic-Challenges-写的是BUU上的sqli-labs中的wp和心得总结，因为题目很多，加上期末考试，这篇总结可能需要大概一个月才能写完。" class="headerlink" title="然后这篇文BUUCTF SQLi-LABS PAGE-1(Basic Challenges)写的是BUU上的sqli-labs中的wp和心得总结，因为题目很多，加上期末考试，这篇总结可能需要大概一个月才能写完。"></a>然后这篇文BUUCTF SQLi-LABS PAGE-1(Basic Challenges)写的是BUU上的sqli-labs中的wp和心得总结，因为题目很多，加上期末考试，这篇总结可能需要大概一个月才能写完。</h2></body></html>]]></content>
     
     <summary type="html">
     
       
       
-        &lt;html&gt;&lt;head&gt;&lt;/head&gt;&lt;body&gt;&lt;h1 id=&quot;sqli-labs&quot;&gt;&lt;a href=&quot;#sqli-labs&quot; class=&quot;headerlink&quot; title=&quot;sqli-labs&quot;&gt;&lt;/a&gt;sqli-labs&lt;/h1&gt;&lt;/body&gt;&lt;/html&gt;
+        &lt;html&gt;&lt;head&gt;&lt;/head&gt;&lt;body&gt;&lt;h2 id=&quot;这段时间在学sql注入。因为刚入门web，对一些基本操作和一些常见的漏洞有了一些了解之后，发现凭借这点东西在比赛的时候做出一道题是远远不够的，所以我想先把sql注入这一块完全掌握了，那么以后看到sql的题就是奥特曼
       
     
     </summary>

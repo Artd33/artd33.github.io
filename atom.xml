@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://artd33.github.io/"/>
-  <updated>2020-02-14T07:11:31.834Z</updated>
+  <updated>2020-02-22T18:27:08.516Z</updated>
   <id>https://artd33.github.io/</id>
   
   <author>
@@ -15,6 +15,30 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>SQLI-TwoTricks</title>
+    <link href="https://artd33.github.io/2020/02/23/twotricksinsqli/"/>
+    <id>https://artd33.github.io/2020/02/23/twotricksinsqli/</id>
+    <published>2020-02-22T18:00:14.000Z</published>
+    <updated>2020-02-22T18:27:08.516Z</updated>
+    
+    <content type="html"><![CDATA[<html><head></head><body><h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>记录一下由 [SWPU2019] Web1 这道题学到的两个比较实用的 trick</p><h1 id="0x01-MariaDB特性"><a href="#0x01-MariaDB特性" class="headerlink" title="0x01 MariaDB特性"></a>0x01 MariaDB特性</h1><p>Maria数据库的这个表可以查表名：mysql.innodb_table_stats</p><p><a href="https://mariadb.com/kb/en/mysqlinnodb_table_stats/" target="_blank" rel="noopener">https://mariadb.com/kb/en/mysqlinnodb_table_stats/</a></p><p><strong>About MariaDB</strong></p><p>成立于2009年，MySQL之父Michael “Monty” Widenius用他的新项目MariaDB完成了对MySQL的“反戈一击”。开发这个分支的原因之一是：甲骨文公司收购了MySQL后，有将MySQL闭源的潜在风险，因此社区采用分支的方式来避开这个风险。 过去一年中，大型互联网用户以及Linux发行商纷纷抛弃MySQL，转投MariaDB阵营。MariaDB是目前最受关注的MySQL数据库衍生版，也被视为开源数据库MySQL的替代品。</p><h1 id="0x02-无列名注入"><a href="#0x02-无列名注入" class="headerlink" title="0x02 无列名注入"></a>0x02 无列名注入</h1><ol><li><p>创建一个数据库叫 testdb，再创一个 user 表，结构如下：</p><a href="https://cdn.jsdelivr.net/gh/Artd33/CDN@3.2/nocolumns/1.png" data-fancybox="group" data-caption class="fancybox"><img width="600" height alt align="left" data-src="https://cdn.jsdelivr.net/gh/Artd33/CDN@3.2/nocolumns/1.png" class="lazyload" title></a></li><li><p>往这个表里插入一些数据：</p><div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang"></div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql> insert into user values(1,'admin','778778'),(2,'Artd33','123520');</span><br></pre></td></tr></tbody></table></figure></div></li><li><p>正常查询：</p><div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang"></div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql> select * from user;</span><br></pre></td></tr></tbody></table></figure></div><a href="https://cdn.jsdelivr.net/gh/Artd33/CDN@3.2/nocolumns/2.png" data-fancybox="group" data-caption class="fancybox"><img width="600" height alt align="left" data-src="https://cdn.jsdelivr.net/gh/Artd33/CDN@3.2/nocolumns/2.png" class="lazyload" title></a></li></ol><ol start="4"><li><p>这时再使用一个union查询：</p><div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang"></div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql> select 1,2,3 union select * from user;</span><br></pre></td></tr></tbody></table></figure></div><a href="https://cdn.jsdelivr.net/gh/Artd33/CDN@3.2/nocolumns/3.png" data-fancybox="group" data-caption class="fancybox"><img width="600" height alt align="left" data-src="https://cdn.jsdelivr.net/gh/Artd33/CDN@3.2/nocolumns/3.png" class="lazyload" title></a></li><li><p>利用数字3代替未知的列名，需要加上反引号。后面加了一个a是为了表示这个表（select 1,2,3 union select * from user）的别名，不然会报错。</p><div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang"></div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql> select `3` from (select 1,2,3 union select * from user)a;</span><br></pre></td></tr></tbody></table></figure></div><a href="https://cdn.jsdelivr.net/gh/Artd33/CDN@3.2/nocolumns/4.png" data-fancybox="group" data-caption class="fancybox"><img width="600" height alt align="left" data-src="https://cdn.jsdelivr.net/gh/Artd33/CDN@3.2/nocolumns/4.png" class="lazyload" title></a></li><li><p>当 ` 不能使用时，用别名来代替：</p><div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang"></div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysel> select b from (select 1,2,3 as b union select * from user)a;</span><br></pre></td></tr></tbody></table></figure></div><a href="https://cdn.jsdelivr.net/gh/Artd33/CDN@3.2/nocolumns/5.png" data-fancybox="group" data-caption class="fancybox"><img width="600" height alt align="left" data-src="https://cdn.jsdelivr.net/gh/Artd33/CDN@3.2/nocolumns/5.png" class="lazyload" title></a></li></ol><h1 id="0x03-做题心得"><a href="#0x03-做题心得" class="headerlink" title="0x03 做题心得"></a>0x03 做题心得</h1><p>一开始以为是xss，看了WP才知道是sql注入。判断漏洞的存在不能只看表面，要仔细地分析各种功能的代码实现，这又牵扯到了开发能力……</p></body></html>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;html&gt;&lt;head&gt;&lt;/head&gt;&lt;body&gt;&lt;h1 id=&quot;0x00-前言&quot;&gt;&lt;a href=&quot;#0x00-前言&quot; class=&quot;headerlink&quot; title=&quot;0x00 前言&quot;&gt;&lt;/a&gt;0x00 前言&lt;/h1&gt;&lt;p&gt;记录一下由 [SWPU2019] Web1 这道题
+      
+    
+    </summary>
+    
+    
+    
+      <category term="sqli" scheme="https://artd33.github.io/tags/sqli/"/>
+    
+  </entry>
   
   <entry>
     <title>文件上传漏洞之黑名单检测绕过</title>
